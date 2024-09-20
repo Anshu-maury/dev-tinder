@@ -1,14 +1,29 @@
 const express = require("express");
+
 const app = express();
-app.use("/",(req,res) => {
-    res.send("hello from the server")
+const {authLogin,userLogin} = require("../middlewares/auth") 
+
+app.get("/admin/login",(req,res) => {
+  res.send("all data sent")
 })
-app.use("/home",(req,res) => {
-    res.send("home page")
+app.get("/admin", authLogin,(req,res) =>{
+  res.send("admin logged in")
+});
+// app.use("/admin/login",(req,res) => {
+//   res.send("all data sent")
+// })
+app.get("/user",userLogin,(req,res) =>{
+  res.send("user logged in")
+});
+app.get("/home" ,(req,res) =>{
+  res.send('home page')
 })
-app.use("/user",(req,res) => {
-    res.send("user login")
+app.get("/user/login",userLogin,(req,res) => {
+  res.send("user data sent")
 })
-app.listen(4000, () => {
-    console.log("server is listening")
-})
+// app.use((err,req,res,next) =>{
+//   if(err){
+//     res.status(500).send("something went wrong")
+//   }
+// })
+app.listen(4000)
