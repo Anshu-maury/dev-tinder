@@ -1,11 +1,5 @@
-
 const mongoose = require("mongoose");
-const ConnectDb = async() => {
-await mongoose.connect("localhost:27017")
+const connectDB = async() => {
+    await mongoose.connect("mongodb://localhost:27017/devtinder")
 }
-ConnectDb
-.then (() => {
-    console.log("COnnectDatabase")
-}).catch(err => {
-console.error("database not connected")
-})
+module.exports = {connectDB};
