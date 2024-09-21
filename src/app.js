@@ -27,7 +27,11 @@ const {authLogin,userLogin} = require("../middlewares/auth")
 //     res.status(500).send("something went wrong")
 //   }
 // })
+
+//  middleware for converting the json object into js object
 app.use(express.json());
+
+// for creating a user
 app.post("/signup",async(req,res) => {
   console.log(req.body)
   // creating a new instance of a User model
@@ -39,6 +43,46 @@ res.send("user added sucessfully")
 catch(err) {
   res.status(400).send("Error saving the user");
 }
+})
+
+// get user by email
+app.get("/user",async(req,res) => {
+  const userEmail = req.body.emailId;
+  // console.log(userEmail)
+  try{
+    const user = await User.find({emailId:userEmail})
+    if(user.length === 0){
+    res.status(400).send("Smoenthing went wrong")
+  }else{
+    res.send(user)
+  }
+  }
+  catch(err){
+    re.status(400).send("email not found")
+  }
+})
+
+// get user by id
+app.get("/user/id",async(req,res) => {
+  const userId = req.body._id;
+  try{
+    const user = await User.findById({_id:userId});
+    res.send(user)
+  }
+  catch(err){
+    res.status(400).send("Id not Found")
+  }
+})
+
+// send all the user /feed
+app.get("/feed",async(req,res) => {
+  try{
+    const user = await User.find({});
+    res.send(user)
+  }
+  catch(err){
+    res.status(400).send("User not found")
+  }
 })
 connectDB()
 .then(() => {
