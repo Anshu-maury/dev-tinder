@@ -84,6 +84,41 @@ app.get("/feed",async(req,res) => {
     res.status(400).send("User not found")
   }
 })
+
+// delete the user
+app.delete("/user/delete",async(req,res) => {
+  const deleteUser = req.body._id;
+  try{
+    const user = await User.findByIdAndDelete({_id:deleteUser});
+    res.send(user) 
+  }
+  catch(err){
+    res.status(400).send(" not deleted user")
+  }
+})
+
+// Update the user 
+
+app.patch("/user/update",async(req,res) => {
+  const userId = req.body._id;
+  const data = req.body
+  console.log(data)
+  try{
+    const ALLOWED_UPDATES = [
+      "userId","gender","age","skills","about","lastNmae"
+    ]
+    const isUpdateAllowed = Object.keys(data).every((k) => ALLOWED_UPDATES.includes(k));
+    if(!isUpdateAllowed){
+      throw new Error("Update not Allowed")
+    }
+    const user = await User.findByIdAndUpdate({_id: userId},data,{runValidators:true});
+    console.log(user);
+    res.send("user updated successfully")
+  }
+  catch(err){
+    res.status(400).send("UpdateFailed : "+ err.message) ;
+  }
+})
 connectDB()
 .then(() => {
     console.log("Dtabase connected")
